@@ -3,4 +3,12 @@
     <string name="title_bugs">Bugs</string>
     <string name="title_improvements">Improvements</string>
     <string name="title_ideas">Ideas</string>
+    <string name="title_activity_bug">BugActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_fix">Fix</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_delete">Delete</string>
+    <string name="title_view">View</string>
 </resources>

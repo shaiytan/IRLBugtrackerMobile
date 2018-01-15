@@ -206,7 +206,7 @@ class StubModel : Model {
     override fun addBug(bug: TheBug) = 1 + (data.map(TheBug::id).max() ?: 0)
 
     override fun deleteBug(id: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBugById(id: Int) = data.find { it.id == id }
@@ -214,6 +214,6 @@ class StubModel : Model {
     override fun getBugs(type: BugType) = data.filter { it.type == type }
 
     override fun updateBug(bug: TheBug) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
