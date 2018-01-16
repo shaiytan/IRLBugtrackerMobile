@@ -110,6 +110,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:inputType="textMultiLine"
+        android:maxLines="128"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="4"

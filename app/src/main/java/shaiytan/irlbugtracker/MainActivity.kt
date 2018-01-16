@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter = BugPresenter(StubModel(), this)
+        presenter = BugPresenter(MobileModel(this), this)
         navigation.setOnNavigationItemSelectedListener { item ->
             val type = associatedType(item.itemId)
             bugslist.adapter = adapterOf(datalists[type]!!)

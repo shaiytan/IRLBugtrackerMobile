@@ -14,7 +14,7 @@ class BugActivity : AppCompatActivity() {
     private fun setBugView(bug: TheBug) {
         header.text = bug.name
         rating.text = "Category: ${bug.category}    Rating:${bug.category.rating}"
-        description.text = bug.description
+        description.text = String.format("%s\n\n%2\$td.%2\$tm.%2\$ty", bug.description, bug.date)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
