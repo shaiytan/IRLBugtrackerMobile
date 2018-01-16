@@ -12,6 +12,10 @@ import models.*
 import presenter.*
 import views.View
 
+enum class Command {
+    NEW, FIX, EDIT, DELETE;
+}
+
 infix fun Activity.display(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
@@ -19,6 +23,8 @@ infix fun Activity.display(message: String) {
 class MainActivity : AppCompatActivity(), View {
     companion object {
         val SHOW_BUG_REQUEST = 100
+        val NEW_BUG_REQUEST = 101
+        val EDIT_BUG_REQUEST = 102
     }
 
     private val datalists = mapOf<BugType, MutableList<String>>(
@@ -41,6 +47,9 @@ class MainActivity : AppCompatActivity(), View {
         bugslist.setOnItemClickListener { _, _, position, _ ->
             lastSelected = position
             presenter?.onBugSelected(position, associatedType(navigation.selectedItemId))
+        }
+        fab.setOnClickListener { _ ->
+            presenter?.onAdd(associatedType(navigation.selectedItemId))
         }
     }
 
@@ -72,16 +81,35 @@ class MainActivity : AppCompatActivity(), View {
         startActivityForResult(intent, SHOW_BUG_REQUEST)
     }
 
+    private fun onShowBugResult(data: Intent) {
+        val index = data.getIntExtra("index", -1)
+        val type = data.getSerializableExtra("type") as BugType
+        when (data.getSerializableExtra("command") as Command) {
+            Command.FIX -> presenter?.onFix(index, type)
+            Command.EDIT -> presenter?.onEdit(index, type)
+            Command.DELETE -> presenter?.onDelete(index, type)
+            else -> throw IllegalArgumentException("Bug Activity returned invalid value")
+        }
+    }
+
+    private fun showBugFormActivity(bug: TheBug, requestCode: Int) {
+        val intent = Intent(this, FormActivity::class.java)
+        intent.putExtra("bug", Gson().toJson(bug))
+        startActivityForResult(intent, requestCode)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK) return
-        if (requestCode == SHOW_BUG_REQUEST && data != null) {
-            val index = data.getIntExtra("index", -1)
-            val type = data.getSerializableExtra("type") as BugType
-            when (data.getSerializableExtra("command") as Command) {
-                Command.FIX -> presenter?.onFix(index, type)
-                Command.EDIT -> presenter?.onEdit(index, type)
-                Command.DELETE -> presenter?.onDelete(index, type)
-            }
+        if (data != null) when (requestCode) {
+            SHOW_BUG_REQUEST -> onShowBugResult(data)
+            NEW_BUG_REQUEST ->
+                presenter?.addBug(Gson().fromJson(data.getStringExtra("bug"), TheBug::class.java))
+            EDIT_BUG_REQUEST ->
+                presenter?.editBug(
+                        Gson().fromJson(
+                                data.getStringExtra("bug"),
+                                TheBug::class.java))
+            else -> throw IllegalArgumentException("Invalid request code on Activity result")
         }
     }
 
@@ -110,10 +138,13 @@ class MainActivity : AppCompatActivity(), View {
     }
 
     override fun showBugForm(type: BugType) {
-        this display "display new bug form"
+        showBugFormActivity(
+                TheBug(id = 0, name = "", type = type),
+                NEW_BUG_REQUEST
+        )
     }
 
     override fun showBugForm(bug: TheBug) {
-        this display "display edit bug form"
+        showBugFormActivity(bug, EDIT_BUG_REQUEST)
     }
 }

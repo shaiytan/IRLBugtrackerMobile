@@ -9,9 +9,6 @@ import kotlinx.android.synthetic.main.activity_bug.*
 import models.BugType
 import models.TheBug
 
-enum class Command {
-    FIX, EDIT, DELETE;
-}
 
 class BugActivity : AppCompatActivity() {
     private fun setBugView(bug: TheBug) {
